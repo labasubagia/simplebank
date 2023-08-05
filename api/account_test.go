@@ -2,7 +2,9 @@ package api
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -35,7 +37,7 @@ func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Accoun
 	require.Equal(t, account, gotAccount)
 }
 
-func TestGetAccountAPI(t *testing.T) {
+func TestGetAccount_OK(t *testing.T) {
 	account := randomAccount()
 
 	ctrl := gomock.NewController(t)
@@ -57,4 +59,71 @@ func TestGetAccountAPI(t *testing.T) {
 	server.router.ServeHTTP(recorder, request)
 	require.Equal(t, http.StatusOK, recorder.Code)
 	requireBodyMatchAccount(t, recorder.Body, account)
+}
+
+func TestGetAccount_InvalidID(t *testing.T) {
+	account := randomAccount()
+	account.ID = 0
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		GetAccount(gomock.Any(), gomock.Any()).
+		Times(0)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	url := fmt.Sprintf("/accounts/%d", account.ID)
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
+func TestGetAccount_NotFound(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		GetAccount(gomock.Any(), gomock.Any()).
+		Times(1).
+		Return(db.Account{}, sql.ErrNoRows)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	url := fmt.Sprintf("/accounts/%d", 200)
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusNotFound, recorder.Code)
+}
+
+func TestGetAccount_InternalError(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		GetAccount(gomock.Any(), gomock.Any()).
+		Times(1).
+		Return(db.Account{}, errors.New("unknown error"))
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	url := fmt.Sprintf("/accounts/%d", 200)
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusInternalServerError, recorder.Code)
 }
