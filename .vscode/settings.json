@@ -1,0 +1,13 @@
+{
+    "cSpell.words": [
+        "DBTX",
+        "labasubagia",
+        "simplebank",
+        "sqlc",
+        "sslmode",
+        "stretchr"
+    ],
+    "go.testFlags": [
+        "-count=1"
+    ]
+}
