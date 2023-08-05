@@ -27,6 +27,24 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 
 		txName := ctx.Value(txKey)
 
+		fmt.Println(txName, "lock both account")
+		accounts, err := q.GetAccountsForUpdate(ctx, []int64{arg.FromAccountID, arg.ToAccountID})
+		if err != nil {
+			return err
+		}
+		accountMap := map[int64]Account{}
+		for _, account := range accounts {
+			accountMap[account.ID] = account
+		}
+		fromAccount, ok := accountMap[arg.FromAccountID]
+		if !ok {
+			return errors.New("from account not found")
+		}
+		toAccount, ok := accountMap[arg.ToAccountID]
+		if !ok {
+			return errors.New("to account not found")
+		}
+
 		fmt.Println(txName, "create transfer")
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams(arg))
 		if err != nil {
@@ -49,24 +67,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		})
 		if err != nil {
 			return err
-		}
-
-		fmt.Println(txName, "select & lock both account")
-		accounts, err := q.GetAccountsForUpdate(ctx, []int64{arg.FromAccountID, arg.ToAccountID})
-		if err != nil {
-			return err
-		}
-		accountMap := map[int64]Account{}
-		for _, account := range accounts {
-			accountMap[account.ID] = account
-		}
-		fromAccount, ok := accountMap[arg.FromAccountID]
-		if !ok {
-			return errors.New("from account not found")
-		}
-		toAccount, ok := accountMap[arg.ToAccountID]
-		if !ok {
-			return errors.New("to account not found")
 		}
 
 		fmt.Println(txName, "subtract account 1")
