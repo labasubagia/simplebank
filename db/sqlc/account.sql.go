@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/lib/pq"
 )
 
 const createAccount = `-- name: CreateAccount :one
@@ -83,6 +85,41 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const getAccountsForUpdate = `-- name: GetAccountsForUpdate :many
+SELECT id, owner, balance, currency, created_at FROM accounts
+WHERE id = ANY($1::bigint[])
+FOR NO KEY UPDATE
+`
+
+func (q *Queries) GetAccountsForUpdate(ctx context.Context, ids []int64) ([]Account, error) {
+	rows, err := q.db.QueryContext(ctx, getAccountsForUpdate, pq.Array(ids))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Account
+	for rows.Next() {
+		var i Account
+		if err := rows.Scan(
+			&i.ID,
+			&i.Owner,
+			&i.Balance,
+			&i.Currency,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listAccounts = `-- name: ListAccounts :many

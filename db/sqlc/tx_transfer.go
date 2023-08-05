@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 )
 
@@ -50,70 +51,40 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		// Lock flow --> from_id < to_id
-		if arg.FromAccountID < arg.ToAccountID {
+		fmt.Println(txName, "select & lock both account")
+		accounts, err := q.GetAccountsForUpdate(ctx, []int64{arg.FromAccountID, arg.ToAccountID})
+		if err != nil {
+			return err
+		}
+		accountMap := map[int64]Account{}
+		for _, account := range accounts {
+			accountMap[account.ID] = account
+		}
+		fromAccount, ok := accountMap[arg.FromAccountID]
+		if !ok {
+			return errors.New("from account not found")
+		}
+		toAccount, ok := accountMap[arg.ToAccountID]
+		if !ok {
+			return errors.New("to account not found")
+		}
 
-			fmt.Println(txName, "get account 1")
-			account1, err := q.GetAccountForUpdate(ctx, arg.FromAccountID)
-			if err != nil {
-				return err
-			}
+		fmt.Println(txName, "subtract account 1")
+		result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      fromAccount.ID,
+			Balance: fromAccount.Balance - arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
 
-			fmt.Println(txName, "update account 1")
-			result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID:      account1.ID,
-				Balance: account1.Balance - arg.Amount,
-			})
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(txName, "get account 2")
-			account2, err := q.GetAccountForUpdate(ctx, arg.ToAccountID)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(txName, "update account 2")
-			result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID:      account2.ID,
-				Balance: account2.Balance + arg.Amount,
-			})
-			if err != nil {
-				return err
-			}
-
-		} else {
-
-			fmt.Println(txName, "get account 2")
-			account2, err := q.GetAccountForUpdate(ctx, arg.ToAccountID)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(txName, "update account 2")
-			result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID:      account2.ID,
-				Balance: account2.Balance + arg.Amount,
-			})
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(txName, "get account 1")
-			account1, err := q.GetAccountForUpdate(ctx, arg.FromAccountID)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(txName, "update account 1")
-			result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID:      account1.ID,
-				Balance: account1.Balance - arg.Amount,
-			})
-			if err != nil {
-				return err
-			}
+		fmt.Println(txName, "add account 2")
+		result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      toAccount.ID,
+			Balance: toAccount.Balance + arg.Amount,
+		})
+		if err != nil {
+			return err
 		}
 
 		return nil

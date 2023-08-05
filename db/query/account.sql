@@ -17,6 +17,10 @@ SELECT * FROM accounts
 WHERE id = $1 LIMIT 1
 FOR NO KEY UPDATE;
 
+-- name: GetAccountsForUpdate :many
+SELECT * FROM accounts
+WHERE id = ANY(@ids::bigint[])
+FOR NO KEY UPDATE; 
 
 -- name: ListAccounts :many
 SELECT * FROM accounts
