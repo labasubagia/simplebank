@@ -1,11 +1,13 @@
 {
     "cSpell.words": [
         "DBTX",
+        "gomock",
         "gonic",
         "Gopkg",
         "isready",
         "labasubagia",
         "mapstructure",
+        "mockgen",
         "oneof",
         "simplebank",
         "sqlc",
