@@ -5,6 +5,7 @@
         "Gopkg",
         "isready",
         "labasubagia",
+        "mapstructure",
         "oneof",
         "simplebank",
         "sqlc",
