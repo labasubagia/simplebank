@@ -20,6 +20,9 @@ sqlc:
 test:
 	go test -v -cover ./...
 
-.PHONY: env_up env_down migrate_up migrate_down migrate_drop sqlc test
+server:
+	go run main.go
+
+.PHONY: env_up env_down migrate_up migrate_down migrate_drop sqlc test server
 
  
