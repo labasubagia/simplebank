@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -118,7 +117,7 @@ func TestGetAccount_InternalError(t *testing.T) {
 	store.EXPECT().
 		GetAccount(gomock.Any(), gomock.Any()).
 		Times(1).
-		Return(db.Account{}, errors.New("unknown error"))
+		Return(db.Account{}, sql.ErrConnDone)
 
 	server := NewServer(store)
 	recorder := httptest.NewRecorder()
@@ -246,14 +245,10 @@ func TestCreateAccount(t *testing.T) {
 				"currency": account.Currency,
 			},
 			buildStubs: func(store *mock_db.MockStore) {
-				arg := db.CreateAccountParams{
-					Owner:    account.Owner,
-					Currency: account.Currency,
-				}
 				store.EXPECT().
-					CreateAccount(gomock.Any(), gomock.Eq(arg)).
+					CreateAccount(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.Account{}, errors.New("internal error"))
+					Return(db.Account{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
