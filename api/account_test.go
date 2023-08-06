@@ -130,14 +130,14 @@ func TestGetAccount_InternalError(t *testing.T) {
 
 func TestUpdateAccount_OK(t *testing.T) {
 	account := randomAccount()
-	body := db.UpdateAccountParams{ID: account.ID, Balance: account.Balance}
+	body := updateAccountRequest{ID: account.ID, Balance: account.Balance}
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	store := mock_db.NewMockStore(ctrl)
 	store.EXPECT().
-		UpdateAccount(gomock.Any(), gomock.Eq(body)).
+		UpdateAccount(gomock.Any(), gomock.Eq(db.UpdateAccountParams{ID: body.ID, Balance: body.Balance})).
 		Times(1).
 		Return(account, nil)
 
@@ -156,14 +156,14 @@ func TestUpdateAccount_OK(t *testing.T) {
 }
 
 func TestUpdateAccount_NotFound(t *testing.T) {
-	body := db.UpdateAccountParams{ID: 200, Balance: 200}
+	body := updateAccountRequest{ID: 200, Balance: 200}
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	store := mock_db.NewMockStore(ctrl)
 	store.EXPECT().
-		UpdateAccount(gomock.Any(), gomock.Eq(body)).
+		UpdateAccount(gomock.Any(), gomock.Eq(db.UpdateAccountParams{ID: body.ID, Balance: body.Balance})).
 		Times(1).
 		Return(db.Account{}, sql.ErrNoRows)
 
@@ -200,6 +200,91 @@ func TestUpdateAccount_BodyInvalid(t *testing.T) {
 
 	url := fmt.Sprintf("/accounts/%d", 200)
 	request, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
+func TestCreateAccount_OK(t *testing.T) {
+	account := randomAccount()
+	body := createAccountRequest{
+		Owner:    account.Owner,
+		Currency: account.Currency,
+	}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		CreateAccount(gomock.Any(), gomock.Eq(db.CreateAccountParams{Owner: body.Owner, Currency: body.Currency})).
+		Times(1).
+		Return(account, nil)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := "/accounts"
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusOK, recorder.Code)
+}
+
+func TestCreateAccount_InternalError(t *testing.T) {
+	account := randomAccount()
+	body := createAccountRequest{
+		Owner:    account.Owner,
+		Currency: account.Currency,
+	}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		CreateAccount(gomock.Any(), gomock.Eq(db.CreateAccountParams{Owner: body.Owner, Currency: body.Currency})).
+		Times(1).
+		Return(db.Account{}, errors.New("unknown error"))
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := "/accounts"
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusInternalServerError, recorder.Code)
+}
+
+func TestCreateAccount_BodyInvalid(t *testing.T) {
+	body := struct{}{}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		CreateAccount(gomock.Any(), gomock.Any()).
+		Times(0)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := "/accounts"
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 	require.NoError(t, err)
 
 	server.router.ServeHTTP(recorder, request)
