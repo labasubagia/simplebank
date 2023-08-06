@@ -2,9 +2,7 @@ package api
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/labasubagia/simplebank/db/sqlc"
@@ -29,42 +27,6 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, account)
-}
-
-type updateAccountRequest struct {
-	ID      int64 `uri:"id" bind:"required,min=1"`
-	Balance int64 `json:"balance" binding:"required,min=1"`
-}
-
-func (server *Server) updateAccount(ctx *gin.Context) {
-	ID, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(errors.New("id invalid")))
-		return
-	}
-
-	req := updateAccountRequest{}
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	arg := db.UpdateAccountParams{
-		ID:      int64(ID),
-		Balance: req.Balance,
-	}
-	account, err := server.store.UpdateAccount(ctx, arg)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
-			return
-		}
-
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
