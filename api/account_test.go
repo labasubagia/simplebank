@@ -127,3 +127,81 @@ func TestGetAccount_InternalError(t *testing.T) {
 	server.router.ServeHTTP(recorder, request)
 	require.Equal(t, http.StatusInternalServerError, recorder.Code)
 }
+
+func TestUpdateAccount_OK(t *testing.T) {
+	account := randomAccount()
+	body := db.UpdateAccountParams{ID: account.ID, Balance: account.Balance}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		UpdateAccount(gomock.Any(), gomock.Eq(body)).
+		Times(1).
+		Return(account, nil)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := fmt.Sprintf("/accounts/%d", account.ID)
+	request, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusOK, recorder.Code)
+}
+
+func TestUpdateAccount_NotFound(t *testing.T) {
+	body := db.UpdateAccountParams{ID: 200, Balance: 200}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		UpdateAccount(gomock.Any(), gomock.Eq(body)).
+		Times(1).
+		Return(db.Account{}, sql.ErrNoRows)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := fmt.Sprintf("/accounts/%d", body.ID)
+	request, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusNotFound, recorder.Code)
+}
+
+func TestUpdateAccount_BodyInvalid(t *testing.T) {
+	body := struct{}{}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	store := mock_db.NewMockStore(ctrl)
+	store.EXPECT().
+		UpdateAccount(gomock.Any(), gomock.Eq(body)).
+		Times(0)
+
+	server := NewServer(store)
+	recorder := httptest.NewRecorder()
+
+	data, err := json.Marshal(body)
+	require.NoError(t, err)
+
+	url := fmt.Sprintf("/accounts/%d", 200)
+	request, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusBadRequest, recorder.Code)
+}
