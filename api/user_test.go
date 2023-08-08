@@ -107,7 +107,41 @@ func TestCreateUser(t *testing.T) {
 			},
 		},
 		{
-			name: "Invalid",
+			name: "InvalidUsername",
+			body: gin.H{
+				"username":  "123#",
+				"full_name": user.FullName,
+				"password":  password,
+				"email":     user.Email,
+			},
+			buildStubs: func(store *mock_db.MockStore) {
+				store.EXPECT().
+					CreateUser(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "InvalidEmail",
+			body: gin.H{
+				"username":  user.Username,
+				"full_name": user.FullName,
+				"password":  password,
+				"email":     "invalid-email",
+			},
+			buildStubs: func(store *mock_db.MockStore) {
+				store.EXPECT().
+					CreateUser(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "Invalid Body",
 			body: gin.H{},
 			buildStubs: func(store *mock_db.MockStore) {
 				store.EXPECT().
