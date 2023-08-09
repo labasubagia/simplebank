@@ -77,7 +77,7 @@ func TestCreateUser(t *testing.T) {
 					Return(user, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				res := createUserResponse{
+				res := userResponse{
 					Username:          user.Username,
 					FullName:          user.FullName,
 					Email:             user.Email,
@@ -141,7 +141,7 @@ func TestCreateUser(t *testing.T) {
 			},
 		},
 		{
-			name: "Invalid Body",
+			name: "InvalidBody",
 			body: gin.H{},
 			buildStubs: func(store *mock_db.MockStore) {
 				store.EXPECT().
@@ -162,7 +162,7 @@ func TestCreateUser(t *testing.T) {
 			store := mock_db.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)
@@ -191,11 +191,11 @@ func randomUser(t *testing.T) (db.User, string) {
 	return user, password
 }
 
-func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user createUserResponse) {
+func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user userResponse) {
 	data, err := io.ReadAll(body)
 	require.NoError(t, err)
 
-	var gotUser createUserResponse
+	var gotUser userResponse
 	err = json.Unmarshal(data, &gotUser)
 	require.NoError(t, err)
 	require.Equal(t, user, gotUser)

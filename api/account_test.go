@@ -91,7 +91,7 @@ func TestGetAccount(t *testing.T) {
 			store := mock_db.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
@@ -173,7 +173,7 @@ func TestCreateAccount(t *testing.T) {
 			store := mock_db.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)
@@ -253,7 +253,9 @@ func TestListAccounts(t *testing.T) {
 			defer ctrl.Finish()
 
 			store := mock_db.NewMockStore(ctrl)
-			server := NewServer(store)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := "/accounts"
@@ -266,8 +268,6 @@ func TestListAccounts(t *testing.T) {
 				query.Add("page_size", strconv.Itoa(tc.query.PageSize))
 				request.URL.RawQuery = query.Encode()
 			}
-
-			tc.buildStubs(store)
 
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
