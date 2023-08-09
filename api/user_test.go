@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -86,6 +87,30 @@ func TestCreateUser(t *testing.T) {
 				}
 				require.Equal(t, http.StatusOK, recorder.Code)
 				requireBodyMatchUser(t, recorder.Body, res)
+			},
+		},
+		{
+			name: "InternalError",
+			body: gin.H{
+				"username":  user.Username,
+				"full_name": user.FullName,
+				"password":  password,
+				"email":     user.Email,
+			},
+			buildStubs: func(store *mock_db.MockStore) {
+				arg := db.CreateUserParams{
+					Username:       user.Username,
+					FullName:       user.FullName,
+					Email:          user.Email,
+					HashedPassword: user.HashedPassword,
+				}
+				store.EXPECT().
+					CreateUser(gomock.Any(), EqCreateUserParams(arg, password)).
+					Times(1).
+					Return(db.User{}, errors.New("unknown"))
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
 			},
 		},
 		{
