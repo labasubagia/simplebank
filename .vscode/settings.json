@@ -12,6 +12,7 @@
         "mapstructure",
         "mockgen",
         "oneof",
+        "Paseto",
         "simplebank",
         "sqlc",
         "sslmode",
