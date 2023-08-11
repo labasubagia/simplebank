@@ -130,8 +130,11 @@ func TestGetAccount(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for i := range testCases {
+		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -287,8 +290,11 @@ func TestCreateAccount(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for i := range testCases {
+		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -395,9 +401,14 @@ func TestListAccounts(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for i := range testCases {
+
+		tc := testCases[i]
 
 		t.Run(tc.name, func(t *testing.T) {
+
+			t.Parallel()
+
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
