@@ -1,0 +1,35 @@
+name: deploy minikube
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+  pull_request: 
+    branches:
+      - main
+  
+jobs:
+  deploy_minikube:
+    name: Deploy Minikube
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup minikube
+        uses: hiberbee/github-action-minikube@1.7.0
+      
+      - name: Run Skaffold
+        uses: hiberbee/github-action-skaffold@1.27.0
+        with:
+          command: run
+
+      - name: Check API, Create User
+        run: |
+          curl --location "$(minikube service api --url)/users" \
+            --data-raw '{
+                "username": "test",
+                "full_name": "Test User",
+                "email": "test@gmail.com",
+                "password": "12345678"
+            }'
