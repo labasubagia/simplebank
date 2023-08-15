@@ -18,11 +18,15 @@ jobs:
 
       - name: Setup minikube
         uses: hiberbee/github-action-minikube@1.7.0
+        with:
+          minikube-version: 1.31.1
+          kubernetes-version: 1.27.3
       
       - name: Run Skaffold
         uses: hiberbee/github-action-skaffold@1.27.0
         with:
           command: run
+          skaffold-version: 2.6.0
 
       - name: Check API, Create User
         run: |
