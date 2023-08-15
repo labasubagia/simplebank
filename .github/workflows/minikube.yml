@@ -15,11 +15,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup minikube
-        uses: hiberbee/github-action-minikube@1.7.0
-        with:
-          minikube-version: 1.31.1
-          kubernetes-version: 1.27.3
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
       
       - name: Setup SSH Known Hosts
         run: |
