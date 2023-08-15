@@ -33,6 +33,7 @@ jobs:
           skaffold-version: 2.6.0
           container-structure-test-version: 1.16.0
           kubectl-version: 1.27.3
+          repository: index.docker.io/v2
 
       - name: Check API, Create User
         run: |
