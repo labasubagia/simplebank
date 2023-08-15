@@ -24,13 +24,8 @@ jobs:
           touch ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Install skaffold
-        run: |
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          sudo install skaffold /usr/local/bin/
-      
-      - name: Run skaffold
-        run: skaffold run
+      - name: Apply k8s
+        run: kubectl apply -f infra/k8s
 
       - name: Check API, Create User
         run: |
