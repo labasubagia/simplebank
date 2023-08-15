@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "adminer",
         "alphanum",
         "DBTX",
         "dgrijalva",
@@ -8,12 +9,15 @@
         "gonic",
         "Gopkg",
         "isready",
+        "kompose",
         "labasubagia",
         "mapstructure",
         "mockgen",
         "oneof",
         "Paseto",
+        "pgdata",
         "simplebank",
+        "skaffold",
         "sqlc",
         "sslmode",
         "stretchr"

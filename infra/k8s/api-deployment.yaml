@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+        - args:
+            - /app/main
+          command:
+            - /app/wait-for.sh
+            - db:5432
+            - --
+            - /app/start.sh
+          env:
+            - name: DB_SOURCE
+              value: postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable
+          image: dreamcheck/simplebank:main
+          name: api
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: "0.5"
+      restartPolicy: Always
+status: {}

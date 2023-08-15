@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: simple-bank
+manifests:
+  rawYaml:
+    - infra/k8s/adminer-deployment.yaml
+    - infra/k8s/adminer-service.yaml
+    - infra/k8s/api-deployment.yaml
+    - infra/k8s/api-service.yaml
+    - infra/k8s/db-deployment.yaml
+    - infra/k8s/db-persistentvolumeclaim.yaml
+    - infra/k8s/db-service.yaml

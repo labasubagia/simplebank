@@ -23,6 +23,9 @@ test:
 server:
 	go run main.go
 
+k8s_run:
+	skaffold dev
+
 .PHONY: env_up env_down migrate_up migrate_down migrate_drop sqlc test server
 
  
