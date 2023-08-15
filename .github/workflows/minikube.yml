@@ -2,11 +2,9 @@ name: deploy minikube
 on:
   workflow_dispatch:
   push:
-    branches: 
-      - main
-  pull_request: 
-    branches:
-      - main
+    paths: 
+      - infra/k8s/**
+      - skaffold.yaml
   
 jobs:
   deploy_minikube:
