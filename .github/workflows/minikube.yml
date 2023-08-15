@@ -5,6 +5,7 @@ on:
     paths: 
       - infra/k8s/**
       - skaffold.yaml
+      - .github/workflows/minikube.yml
   
 jobs:
   deploy_minikube:
@@ -26,14 +27,13 @@ jobs:
           touch ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Run Skaffold
-        uses: hiberbee/github-action-skaffold@1.27.0
-        with:
-          command: run
-          skaffold-version: 2.6.0
-          container-structure-test-version: 1.16.0
-          kubectl-version: 1.27.3
-          repository: index.docker.io/v2
+      - name: Install skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-arm64
+          sudo install skaffold /usr/local/bin/
+      
+      - name: Run skaffold
+        run: skaffold run
 
       - name: Check API, Create User
         run: |
