@@ -25,7 +25,10 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
 
       - name: Apply k8s
-        run: kubectl apply -f infra/k8s
+        run: |
+          kubectl apply -f infra/k8s
+          kubectl get pods
+          kubectl get services
 
       - name: Check API, Create User
         run: |
