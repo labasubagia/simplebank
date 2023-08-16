@@ -24,12 +24,6 @@ jobs:
           touch ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Docker pull images
-        run: |
-          docker pull docker.io/adminer:latest
-          docker pull docker.io/dreamcheck/simplebank:main
-          docker pull docker.io/postgres:alpine
-
       - name: Install skaffold
         run: |
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
@@ -40,6 +34,7 @@ jobs:
 
       - name: Check API, Create User
         run: |
+          sleep 5
           curl --location "$(minikube service api --url)/users" \
             --data-raw '{
                 "username": "test",
