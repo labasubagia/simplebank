@@ -32,7 +32,7 @@ spec:
           env:
             - name: DB_SOURCE
               value: postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable
-          image: dreamcheck/simplebank:main
+          image: docker.io/dreamcheck/simplebank:main
           name: api
           ports:
             - containerPort: 5000

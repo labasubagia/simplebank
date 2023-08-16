@@ -22,7 +22,7 @@ spec:
         io.kompose.service: adminer
     spec:
       containers:
-        - image: adminer:latest
+        - image: docker.io/adminer:latest
           name: adminer
           ports:
             - containerPort: 8080
