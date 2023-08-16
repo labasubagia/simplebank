@@ -30,7 +30,7 @@ jobs:
           sudo install skaffold /usr/local/bin/
       
       - name: Run skaffold
-        run: skaffold run -v trace
+        run: skaffold run -v warn
 
       - name: Check API, Create User
         run: |
