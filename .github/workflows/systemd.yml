@@ -11,7 +11,9 @@ on:
 jobs:
   deploy_systemd:
     name: Deploy to systemd
+    
     runs-on: ubuntu-latest
+    
     services: 
       postgres:
         image: postgres:alpine
@@ -26,11 +28,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
-      - name: Check out code
+      - name: Check out
         uses: actions/checkout@v3
 
-      - name: Install go migrate
+      - name: Migrate
         run: | 
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
           sudo mv migrate /usr/bin/migrate

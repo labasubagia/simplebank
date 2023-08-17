@@ -28,10 +28,10 @@ k8s_run:
 
 deploy_systemd:
 	go build
-	cp -u simplebank /bin/simplebank
-	cp -u infra/systemd/* /lib/systemd/system
-	service simplebank start
-	service simplebank enable
-	service simplebank status
+	cp -u simplebank /bin/
+	cp -u infra/systemd/* /lib/systemd/system/
+	systemctl start simplebank
+	systemctl enable simplebank
+	systemctl status simplebank
 
  

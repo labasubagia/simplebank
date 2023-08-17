@@ -2,7 +2,7 @@
 Description=simplebank
 
 [Service]
-Type = simple
+Type=simple
 Restart=always
 RestartSec=5s
 # Environment=GIN_MODE=release
