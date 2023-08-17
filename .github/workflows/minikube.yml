@@ -36,11 +36,11 @@ jobs:
           postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
           export URL=$(minikube service api --url) 
           postman collection run 28977325-d9e66c38-9472-46a8-b41c-16cf3b02a912 \
-            -e 28977325-7fd851a1-1160-4c78-b79b-4e53f07742a7 \
+            -e 28977325-6493092b-46e6-4de5-a4c2-d7a72add3afe \
             --env-var "url=$URL" \
             -i 28977325-1044f8ee-1372-498b-bc38-8f0dec00291f \
             -i 28977325-9ec3a1bb-1bfc-4f92-a099-b108621bac7e \
             -i 28977325-1ae6d742-c1b5-4d8a-92ab-e7dede36e9dc
           postman collection run 28977325-d9e66c38-9472-46a8-b41c-16cf3b02a912 \
-            -e 28977325-7fd851a1-1160-4c78-b79b-4e53f07742a7 \
+            -e 28977325-6493092b-46e6-4de5-a4c2-d7a72add3afe \
             --env-var "url=$URL"
