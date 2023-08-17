@@ -28,7 +28,9 @@ k8s_run:
 
 deploy_systemd:
 	go build
-	cp -u simplebank /bin/
+	mkdir -p /opt/simplebank
+	cp -u simplebank /opt/simplebank/simplebank
+	cp -u .env.example /opt/simplebank/.env
 	cp -u infra/systemd/* /lib/systemd/system/
 	systemctl start simplebank
 	systemctl status simplebank
