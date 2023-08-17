@@ -31,7 +31,6 @@ deploy_systemd:
 	cp -u simplebank /bin/
 	cp -u infra/systemd/* /lib/systemd/system/
 	systemctl start simplebank
-	systemctl enable simplebank
 	systemctl status simplebank
 
  
