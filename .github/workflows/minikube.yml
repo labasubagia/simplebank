@@ -32,8 +32,7 @@ jobs:
           
       - name: Test API
         run: |
-          export URL=$(minikube service api --url) 
-          curl --location "$URL/users" \
+          curl --location "$(minikube service api --url)/users" \
             --data-raw '{
                 "username": "test",
                 "full_name": "Test User",
