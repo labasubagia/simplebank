@@ -41,7 +41,7 @@ jobs:
           make migrate_up
       
       - name: Deploy
-        run: sudo make 
+        run: sudo make deploy_systemd
         
       - name: Test API
         run: |
