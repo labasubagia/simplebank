@@ -41,4 +41,14 @@ jobs:
           make migrate_up
       
       - name: Deploy
-        run: sudo make deploy_systemd
+        run: sudo make 
+        
+      - name: Test API
+        run: |
+          curl --location "$(minikube service api --url)/users" \
+            --data-raw '{
+                "username": "test",
+                "full_name": "Test User",
+                "email": "test@gmail.com",
+                "password": "12345678"
+            }'
