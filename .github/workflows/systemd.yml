@@ -1,0 +1,41 @@
+name: deploy systemd
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+  pull_request: 
+    branches:
+      - main
+  
+jobs:
+  deploy_systemd:
+    name: Deploy to systemd
+    runs-on: ubuntu-latest
+    services: 
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: simple_bank
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Install go migrate
+        run: | 
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/migrate
+          which migrate
+          make migrate_up
+      
+      - name: Deploy
+        run: make deploy_systemd

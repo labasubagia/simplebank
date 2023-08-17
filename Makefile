@@ -26,6 +26,12 @@ server:
 k8s_run:
 	skaffold dev
 
-.PHONY: env_up env_down migrate_up migrate_down migrate_drop sqlc test server
+deploy_systemd:
+	go build
+	cp -u simplebank /bin/simplebank
+	cp -u infra/systemd/* /lib/systemd/system
+	service simplebank start
+	service simplebank enable
+	service simplebank status
 
  
