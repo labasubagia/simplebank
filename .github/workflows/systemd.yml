@@ -38,4 +38,4 @@ jobs:
           make migrate_up
       
       - name: Deploy
-        run: make deploy_systemd
+        run: sudo make deploy_systemd
