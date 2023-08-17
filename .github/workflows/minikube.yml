@@ -32,6 +32,7 @@ jobs:
           
       - name: Test API
         run: |
+          sleep 5
           curl --location "$(minikube service api --url)/users" \
             --data-raw '{
                 "username": "test",
