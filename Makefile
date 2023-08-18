@@ -28,10 +28,16 @@ k8s_run:
 
 deploy_systemd:
 	go build
+
+	# create workdir
 	mkdir -p /opt/simplebank
 	cp -u simplebank /opt/simplebank/simplebank
-	cp -u .env.example /opt/simplebank/.env
+	touch /opt/simplebank/.env # just so the binary not error
+	
+	# add systemd config
 	cp -u infra/systemd/* /lib/systemd/system/
+	
+	# run service
 	systemctl start simplebank
 	systemctl status simplebank
 
