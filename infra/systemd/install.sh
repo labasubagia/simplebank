@@ -9,7 +9,7 @@ go build
 # create workdir
 mkdir -p /opt/simplebank
 cp -u simplebank /opt/simplebank/simplebank
-cp -u /infra/systemd/.env.systemd /opt/simplebank/.env
+cp -u infra/systemd/.env.systemd /opt/simplebank/.env
 
 # add systemd config
 cp -u infra/systemd/simplebank.service /lib/systemd/system/
