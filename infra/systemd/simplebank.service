@@ -5,12 +5,6 @@ Description=simplebank
 Type=simple
 Restart=always
 RestartSec=5s
-Environment=GIN_MODE=release
-Environment=DB_DRIVER=postgres
-Environment=DB_SOURCE=postgresql://postgres:postgres@localhost:5432/simple_bank?sslmode=disable
-Environment=SERVER_ADDRESS=0.0.0.0:5000
-Environment=TOKEN_SYMMETRIC_KEY=12345678901234567890123456789012
-Environment=ACCESS_TOKEN_DURATION=15m
 WorkingDirectory=/opt/simplebank
 ExecStart=/opt/simplebank/simplebank
 

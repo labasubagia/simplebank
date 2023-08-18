@@ -27,18 +27,6 @@ k8s_run:
 	skaffold dev
 
 deploy_systemd:
-	go build
-
-	# create workdir
-	mkdir -p /opt/simplebank
-	cp -u simplebank /opt/simplebank/simplebank
-	touch /opt/simplebank/.env # just so the binary not error
-	
-	# add systemd config
-	cp -u infra/systemd/* /lib/systemd/system/
-	
-	# run service
-	systemctl start simplebank
-	systemctl status simplebank
+	bash infra/systemd/install.sh
 
  
