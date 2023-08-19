@@ -32,6 +32,9 @@ jobs:
   publish_ghcr:
     name: Publish to Github Container Registry
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps: 
       - name: Check out code
         uses: actions/checkout@v3
