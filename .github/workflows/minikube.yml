@@ -31,11 +31,14 @@ jobs:
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
           sudo install skaffold /usr/local/bin/
           skaffold run -v warn
-          
+            
+      - name: Add minikube IP to hosts
+        run: sudo echo "$(minikube ip) api.simplebank.co.id" | sudo tee -a /etc/hosts
+
       - name: Test API
         run: |
           sleep 5
-          curl --location "$(minikube ip)/api/users" \
+          curl --location "$(minikube ip)/users" \
             --data-raw '{
                 "username": "test",
                 "full_name": "Test User",
