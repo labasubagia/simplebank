@@ -11,3 +11,4 @@ manifests:
     - infra/k8s/db-deployment.yaml
     - infra/k8s/db-persistentvolumeclaim.yaml
     - infra/k8s/db-service.yaml
+    - infra/k8s/ingress.yaml
