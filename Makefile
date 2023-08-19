@@ -1,3 +1,6 @@
+DB_URL=postgresql://postgres:postgres@localhost:5432/simple_bank?sslmode=disable
+DB_MIGRATION_PATH=db/migration
+
 env_up:
 	docker compose up -d
 
@@ -6,13 +9,25 @@ env_down:
 
 
 migrate_up:
-	migrate -path db/migration -database "postgresql://postgres:postgres@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path "$(DB_MIGRATION_PATH)" -database "$(DB_URL)" -verbose up
  
 migrate_down:
-	migrate -path db/migration -database "postgresql://postgres:postgres@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate -path "$(DB_MIGRATION_PATH)" -database "$(DB_URL)" -verbose down
 
 migrate_drop:
-	migrate -path db/migration -database "postgresql://postgres:postgres@localhost:5432/simple_bank?sslmode=disable" -verbose drop
+	migrate -path "$(DB_MIGRATION_PATH)" -database "$(DB_URL)" -verbose drop
+
+db_dump:
+	docker compose exec -T db pg_dump -s -U postgres simple_bank > doc/db/schema.sql
+
+db_dbml:
+	sql2dbml --postgres doc/db/schema.sql -o doc/db/schema.dbml
+
+db_doc:
+	# run `make db_dump`
+	# run `make db_dbml`
+	# edit doc/db/schema.sql if error, usually line 183 `password_changed_at` remove default value, dbml error
+	dbdocs build doc/db/schema.dbml
 
 sqlc:
 	sqlc generate

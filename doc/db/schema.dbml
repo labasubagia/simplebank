@@ -1,0 +1,71 @@
+Table "accounts" {
+  "id" bigint [not null]
+  "owner" "character varying" [not null]
+  "balance" bigint [not null]
+  "currency" "character varying" [not null]
+  "created_at" timestamp [not null, default: `now()`]
+
+Indexes {
+  owner [type: btree, name: "accounts_owner_idx"]
+}
+}
+
+Table "entries" {
+  "id" bigint [not null]
+  "account_id" bigint [not null]
+  "amount" bigint [not null, note: 'can be negative or positive']
+  "created_at" timestamp [not null, default: `now()`]
+
+Indexes {
+  account_id [type: btree, name: "entries_account_id_idx"]
+}
+}
+
+Table "schema_migrations" {
+  "version" bigint [not null]
+  "dirty" boolean [not null]
+}
+
+Table "sessions" {
+  "id" uuid [not null]
+  "username" "character varying" [not null]
+  "refresh_token" "character varying" [not null]
+  "user_agent" "character varying" [not null]
+  "client_ip" "character varying" [not null]
+  "is_blocked" boolean [not null, default: false]
+  "expired_at" timestamp [not null]
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "transfers" {
+  "id" bigint [not null]
+  "from_account_id" bigint [not null]
+  "to_account_id" bigint [not null]
+  "amount" bigint [not null, note: 'must be positive']
+  "created_at" timestamp [not null, default: `now()`]
+
+Indexes {
+  from_account_id [type: btree, name: "transfers_from_account_id_idx"]
+  (from_account_id, to_account_id) [type: btree, name: "transfers_from_account_id_to_account_id_idx"]
+  to_account_id [type: btree, name: "transfers_to_account_id_idx"]
+}
+}
+
+Table "users" {
+  "username" "character varying" [not null]
+  "hashed_password" "character varying" [not null]
+  "full_name" "character varying" [not null]
+  "email" "character varying" [not null]
+  "password_changed_at" timestamp [not null]
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Ref "accounts_owner_fkey":"users"."username" < "accounts"."owner"
+
+Ref "entries_account_id_fkey":"accounts"."id" < "entries"."account_id"
+
+Ref "session_user_fkey":"users"."username" < "sessions"."username"
+
+Ref "transfers_from_account_id_fkey":"accounts"."id" < "transfers"."from_account_id"
+
+Ref "transfers_to_account_id_fkey":"accounts"."id" < "transfers"."to_account_id"

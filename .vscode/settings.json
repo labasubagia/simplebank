@@ -13,14 +13,18 @@
         "labasubagia",
         "mapstructure",
         "mockgen",
+        "nextval",
         "oneof",
         "Paseto",
         "pgdata",
+        "pkey",
+        "regclass",
         "simplebank",
         "skaffold",
         "sqlc",
         "sslmode",
-        "stretchr"
+        "stretchr",
+        "xmloption"
     ],
     "go.testFlags": [
         "-count=1"

@@ -1,3 +1,4 @@
 .env
 __debug_bin*
 simplebank
+dbml-error.log
