@@ -2,6 +2,7 @@
     "cSpell.words": [
         "adminer",
         "alphanum",
+        "commitlint",
         "DBTX",
         "dgrijalva",
         "fkey",
@@ -28,5 +29,10 @@
     ],
     "go.testFlags": [
         "-count=1"
-    ]
+    ],
+    "go.lintTool": "golangci-lint",
+    "go.lintFlags": [
+        "--fast"
+    ],
+    "files.insertFinalNewline": true
 }
