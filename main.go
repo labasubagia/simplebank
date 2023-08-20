@@ -35,7 +35,7 @@ func main() {
 	wg.Add(1)
 	go runGrpcServer(config, store)
 
-	wg.Add(2)
+	wg.Add(1)
 	go runGinServer(config, store)
 
 	wg.Wait()
