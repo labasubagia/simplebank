@@ -3,6 +3,8 @@
         "adminer",
         "alphanum",
         "commitlint",
+        "dbdocs",
+        "dbml",
         "DBTX",
         "dgrijalva",
         "fkey",
