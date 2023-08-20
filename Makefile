@@ -10,7 +10,7 @@ env_down:
 
 migrate_up:
 	migrate -path "$(DB_MIGRATION_PATH)" -database "$(DB_URL)" -verbose up
- 
+
 migrate_down:
 	migrate -path "$(DB_MIGRATION_PATH)" -database "$(DB_URL)" -verbose down
 
@@ -32,6 +32,12 @@ db_doc:
 sqlc:
 	sqlc generate
 
+protoc:
+	rm -f pb/*.go
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+		--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+		proto/*.proto
+
 test:
 	go test -v -cover ./...
 
@@ -44,4 +50,5 @@ k8s_run:
 deploy_systemd:
 	bash infra/systemd/install.sh
 
- 
+evans:
+	evans --host localhost --port 6000 -r repl

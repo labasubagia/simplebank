@@ -8,6 +8,7 @@
         "DBTX",
         "dgrijalva",
         "fkey",
+        "gapi",
         "gomock",
         "gonic",
         "Gopkg",
@@ -21,12 +22,16 @@
         "Paseto",
         "pgdata",
         "pkey",
+        "proto",
+        "protobuf",
+        "protoc",
         "regclass",
         "simplebank",
         "skaffold",
         "sqlc",
         "sslmode",
         "stretchr",
+        "timestamppb",
         "xmloption"
     ],
     "go.testFlags": [
@@ -36,5 +41,10 @@
     "go.lintFlags": [
         "--fast"
     ],
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "protoc": {
+        "options": [
+            "--proto_path=protos",
+        ]
+    }
 }

@@ -37,10 +37,15 @@ See more [doc](https://dbdocs.io/laba.dummy1/simplebank)
 - [sqlc](https://sqlc.dev/) sql query generator for Go
 - [golangci-lint](https://golangci-lint.run/) linter
 - [pre-commit](https://pre-commit.com/) pre commit hooks
+- [protoc](https://grpc.io/docs/protoc-installation) protocol buffer compiler
+- [protoc-gen-go](https://grpc.io/docs/languages/go/quickstart/) protocol buffer generator go
+- [protoc-gen-go-grpc](https://grpc.io/docs/languages/go/quickstart/) protocol buffer generator go for grpc
 - [Docker](https://www.docker.com/) containerization
 - [Docker Compose](https://docs.docker.com/compose/) declarative config for docker
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/) local kubernetes deployment
 - [Skaffold](https://skaffold.dev/) workflow building for kubernetes
+- [Postman](https://www.postman.com/) API testing
+- [evans](https://github.com/ktr0731/evans) grpc test (can also using Postman)
 
 ## Run
 ### Run all service
