@@ -9,27 +9,34 @@
         "dgrijalva",
         "fkey",
         "gapi",
+        "golint",
         "gomock",
         "gonic",
         "Gopkg",
+        "grpcgateway",
         "isready",
         "kompose",
         "labasubagia",
         "mapstructure",
         "mockgen",
         "nextval",
+        "nolint",
         "oneof",
+        "openapiv",
         "Paseto",
         "pgdata",
         "pkey",
         "proto",
         "protobuf",
         "protoc",
+        "protojson",
+        "rakyll",
         "regclass",
         "simplebank",
         "skaffold",
         "sqlc",
         "sslmode",
+        "statik",
         "stretchr",
         "timestamppb",
         "xmloption"
@@ -46,5 +53,6 @@
         "options": [
             "--proto_path=protos",
         ]
-    }
+    },
+    "gopls": {}
 }

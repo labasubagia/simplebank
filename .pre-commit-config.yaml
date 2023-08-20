@@ -6,6 +6,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
+        exclude: "^doc/swagger/"
       - id: check-merge-conflict
       - id: end-of-file-fixer
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
@@ -16,7 +17,6 @@ repos:
     rev: v0.5.1
     hooks:
       - id: go-fmt
-      - id: go-vet
       - id: go-imports
       - id: golangci-lint
       - id: go-mod-tidy

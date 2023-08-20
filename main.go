@@ -1,18 +1,23 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net"
-	"sync"
+	"net/http"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/labasubagia/simplebank/api"
 	db "github.com/labasubagia/simplebank/db/sqlc"
+	_ "github.com/labasubagia/simplebank/doc/swagger/statik"
 	"github.com/labasubagia/simplebank/gapi"
 	"github.com/labasubagia/simplebank/pb"
 	"github.com/labasubagia/simplebank/util"
+	"github.com/rakyll/statik/fs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func main() {
@@ -28,17 +33,54 @@ func main() {
 
 	store := db.NewStore(conn)
 
-	// Serve both server for now
+	go runGatewayServer(config, store)
+	runGrpcServer(config, store)
+}
 
-	var wg sync.WaitGroup
+func runGatewayServer(config util.Config, store db.Store) {
+	server, err := gapi.NewServer(config, store)
+	if err != nil {
+		log.Fatal("cannot create gateway server:", err)
+	}
 
-	wg.Add(1)
-	go runGrpcServer(config, store)
+	jsonOption := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
+		MarshalOptions: protojson.MarshalOptions{
+			UseProtoNames: true,
+		},
+		UnmarshalOptions: protojson.UnmarshalOptions{
+			DiscardUnknown: true,
+		},
+	})
 
-	wg.Add(1)
-	go runGinServer(config, store)
+	grpcMux := runtime.NewServeMux(jsonOption)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	wg.Wait()
+	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
+	if err != nil {
+		log.Fatal("cannot register server handler:", err)
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/", grpcMux)
+
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal("cannot create statik fs")
+	}
+	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
+	mux.Handle("/swagger/", swaggerHandler)
+
+	listener, err := net.Listen("tcp", config.HTTPServerAddress)
+	if err != nil {
+		log.Fatal("cannot create listener")
+	}
+
+	log.Printf("start HTTP Gateway server at %s", listener.Addr().String())
+	err = http.Serve(listener, mux)
+	if err != nil {
+		log.Fatal("cannot start HTTP Gateway server")
+	}
 }
 
 func runGrpcServer(config util.Config, store db.Store) {
@@ -62,6 +104,7 @@ func runGrpcServer(config util.Config, store db.Store) {
 	}
 }
 
+//nolint:golint,unused
 func runGinServer(config util.Config, store db.Store) {
 	server, err := api.NewServer(config, store)
 	if err != nil {

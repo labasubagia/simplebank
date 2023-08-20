@@ -40,6 +40,7 @@ See more [doc](https://dbdocs.io/laba.dummy1/simplebank)
 - [protoc](https://grpc.io/docs/protoc-installation) protocol buffer compiler
 - [protoc-gen-go](https://grpc.io/docs/languages/go/quickstart/) protocol buffer generator go
 - [protoc-gen-go-grpc](https://grpc.io/docs/languages/go/quickstart/) protocol buffer generator go for grpc
+- [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) add http handler to grpc at the same time (see doc using protoc)
 - [Docker](https://www.docker.com/) containerization
 - [Docker Compose](https://docs.docker.com/compose/) declarative config for docker
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/) local kubernetes deployment

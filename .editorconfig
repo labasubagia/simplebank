@@ -14,3 +14,6 @@ tab_width = 2
 [{*.go,go.mod,go.sum,Makefile}]
 indent_style = tab
 tab_width = 4
+
+[*.js]
+tab_width = 2
