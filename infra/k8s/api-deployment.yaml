@@ -36,6 +36,11 @@ spec:
           name: api
           ports:
             - containerPort: 5000
+              name: api
+            - containerPort: 5050
+              name: gateway
+            - containerPort: 6000
+              name: grpc
           resources:
             limits:
               memory: 64Mi

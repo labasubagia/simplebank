@@ -11,6 +11,7 @@ metadata:
   name: simplebank-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
 spec:
   ingressClassName: nginx
   rules:
@@ -23,7 +24,27 @@ spec:
               service:
                 name: api
                 port:
-                  number: 80
+                  number: 5000
+    - host: http-gateway.simplebank.co.id
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 5050
+    - host: grpc.simplebank.co.id
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 6000
     - host: adminer.simplebank.co.id
       http:
         paths:
