@@ -197,7 +197,7 @@ func TestCreateUser(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/users"
+			url := "/v1/users"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 
@@ -323,7 +323,7 @@ func TestLoginUser(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/users/login"
+			url := "/v1/users/login"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 

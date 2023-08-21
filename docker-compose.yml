@@ -19,6 +19,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+      - 5050:5050
+      - 6000:6000
     environment:
       # - GIN_MODE=release
       - DB_SOURCE=postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable

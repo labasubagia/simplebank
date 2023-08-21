@@ -293,8 +293,6 @@ func TestCreateTransfer(t *testing.T) {
 	for i := range testCases {
 		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -308,7 +306,7 @@ func TestCreateTransfer(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/transfers"
+			url := "/v1/transfers"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 

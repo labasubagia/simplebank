@@ -2,19 +2,19 @@ name: deploy systemd
 on:
   workflow_dispatch:
   push:
-    branches: 
-      - main
-  pull_request: 
     branches:
       - main
-  
+  pull_request:
+    branches:
+      - main
+
 jobs:
   deploy_systemd:
     name: Deploy to systemd
-    
+
     runs-on: ubuntu-latest
-    
-    services: 
+
+    services:
       postgres:
         image: postgres:alpine
         env:
@@ -34,18 +34,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Migrate
-        run: | 
+        run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
           sudo mv migrate /usr/bin/migrate
           which migrate
           make migrate_up
-      
+
       - name: Deploy
         run: sudo make deploy_systemd
-        
+
       - name: Test API
         run: |
-          curl --location "http://localhost:5000/users" \
+          curl --location "http://localhost:5000/v1/users" \
             --data-raw '{
                 "username": "test",
                 "full_name": "Test User",
