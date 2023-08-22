@@ -69,26 +69,29 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET
-    hashed_password = COALESCE($1, hashed_password),
+    email = COALESCE($1, email),
     full_name = COALESCE($2, full_name),
-    email = COALESCE($3, email)
+    hashed_password = COALESCE($3, hashed_password),
+    password_changed_at = COALESCE($4, password_changed_at)
 WHERE
-    username = $4
+    username = $5
 RETURNING username, hashed_password, full_name, email, password_changed_at, created_at
 `
 
 type UpdateUserParams struct {
-	HashedPassword sql.NullString `json:"hashed_password"`
-	FullName       sql.NullString `json:"full_name"`
-	Email          sql.NullString `json:"email"`
-	Username       string         `json:"username"`
+	Email             sql.NullString `json:"email"`
+	FullName          sql.NullString `json:"full_name"`
+	HashedPassword    sql.NullString `json:"hashed_password"`
+	PasswordChangedAt sql.NullTime   `json:"password_changed_at"`
+	Username          string         `json:"username"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
 	row := q.db.QueryRowContext(ctx, updateUser,
-		arg.HashedPassword,
-		arg.FullName,
 		arg.Email,
+		arg.FullName,
+		arg.HashedPassword,
+		arg.PasswordChangedAt,
 		arg.Username,
 	)
 	var i User
