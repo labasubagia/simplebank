@@ -7,7 +7,8 @@
 go build
 
 # create workdir
-mkdir -p /opt/simplebank
+mkdir -p /opt/simplebank/db
+cp -R db/migration /opt/simplebank/db/
 cp -u simplebank /opt/simplebank/simplebank
 cp -u infra/systemd/.env.systemd /opt/simplebank/.env
 
