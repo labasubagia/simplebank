@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-//go:generate mockgen -source=store.go -destination=./../mock/store.go
+//go:generate go run go.uber.org/mock/mockgen -source=store.go -destination=./../mock/store.go
 type Store interface {
 	Querier
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)

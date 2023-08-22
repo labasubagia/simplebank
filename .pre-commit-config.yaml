@@ -12,6 +12,7 @@ repos:
     rev: "2.7.2"
     hooks:
       - id: editorconfig-checker
+        exclude: "^db/sqlc/"
   - repo: https://github.com/dnephin/pre-commit-golang
     rev: v0.5.1
     hooks:

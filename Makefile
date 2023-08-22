@@ -31,6 +31,7 @@ db_doc:
 
 sqlc:
 	sqlc generate
+	go generate ./...
 
 protoc:
 	rm -f pb/*.go

@@ -22,6 +22,7 @@
         "labasubagia",
         "mapstructure",
         "mockgen",
+        "narg",
         "nextval",
         "nolint",
         "oneof",
