@@ -12,7 +12,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      
+
       - name: Compose up
         uses: isbang/compose-action@v1.5.1
         with:
@@ -26,7 +26,7 @@ jobs:
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
           postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
-          export URL=http://localhost:5000 
+          export URL=http://localhost:5000
           postman collection run 28977325-d9e66c38-9472-46a8-b41c-16cf3b02a912 \
             -e 28977325-6493092b-46e6-4de5-a4c2-d7a72add3afe \
             --env-var "url=$URL" \
