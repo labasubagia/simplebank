@@ -21,4 +21,5 @@ systemctl start simplebank
 systemctl status simplebank
 
 # log
+sleep 5
 sudo journalctl -u simplebank
