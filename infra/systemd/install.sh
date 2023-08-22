@@ -19,3 +19,6 @@ cp -u infra/systemd/simplebank.service /lib/systemd/system/
 systemctl start simplebank
 # systemctl enable simplebank # uncomment for startup
 systemctl status simplebank
+
+# log
+sudo journalctl -u simplebank
