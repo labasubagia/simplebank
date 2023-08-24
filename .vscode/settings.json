@@ -22,6 +22,7 @@
         "labasubagia",
         "mapstructure",
         "mockgen",
+        "Msgf",
         "narg",
         "nextval",
         "nolint",
@@ -43,7 +44,8 @@
         "statik",
         "stretchr",
         "timestamppb",
-        "xmloption"
+        "xmloption",
+        "zerolog"
     ],
     "go.testFlags": [
         "-count=1"

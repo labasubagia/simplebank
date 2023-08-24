@@ -27,7 +27,9 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/rs/zerolog v1.30.0
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/tools v0.9.1 // indirect

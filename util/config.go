@@ -7,6 +7,7 @@ import (
 )
 
 type Config struct {
+	Environment              string        `mapstructure:"ENVIRONMENT"`
 	DBDriver                 string        `mapstructure:"DB_DRIVER"`
 	DBSource                 string        `mapstructure:"DB_SOURCE"`
 	DBMigrationURL           string        `mapstructure:"DB_MIGRATION_URL"`
@@ -16,6 +17,10 @@ type Config struct {
 	TokenSymmetricKey        string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration      time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration     time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
+}
+
+func (c Config) IsEnvProduction() bool {
+	return c.Environment == "production"
 }
 
 func LoadConfig(path string) (config Config, err error) {
