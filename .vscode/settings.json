@@ -2,6 +2,7 @@
     "cSpell.words": [
         "adminer",
         "alphanum",
+        "asynq",
         "commitlint",
         "dbdocs",
         "dbml",
@@ -17,6 +18,7 @@
         "googleapis",
         "Gopkg",
         "grpcgateway",
+        "hibiken",
         "isready",
         "kompose",
         "labasubagia",

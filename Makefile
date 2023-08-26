@@ -33,6 +33,9 @@ sqlc:
 	sqlc generate
 	go generate ./...
 
+generate:
+	go generate ./...
+
 protoc:
 	rm -f pb/*.go
 	rm -f doc/swagger/*.swagger.json
