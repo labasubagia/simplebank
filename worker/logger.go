@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 type Logger struct{}
 
-func NewLogger() asynq.Logger {
+func NewLogger() *Logger {
 	return &Logger{}
 }
 
