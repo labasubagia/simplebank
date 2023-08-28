@@ -54,11 +54,19 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 
-	// TODO: send email
+	subject := "Welcome to simplebank"
+	content := fmt.Sprintf(`Hello %s`, user.FullName)
+	to := []string{user.Email}
+	err = processor.mailer.SendEmail(subject, content, to, nil, nil, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send email: %w", err)
+	}
+
 	log.Info().
 		Str("task", task.Type()).
 		Bytes("payload", task.Payload()).
 		Str("email", user.Email).
 		Msg("processed task")
+
 	return nil
 }

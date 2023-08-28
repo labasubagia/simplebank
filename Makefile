@@ -49,7 +49,7 @@ protoc:
 	statik -src=./doc/swagger/ui -dest=./doc/swagger
 
 test:
-	go test -v -cover ./...
+	go test -v -cover -short ./...
 
 server:
 	go run main.go
