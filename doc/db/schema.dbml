@@ -58,6 +58,17 @@ Table "users" {
   "email" "character varying" [not null]
   "password_changed_at" timestamp [not null, default: "0001-01-01 00:00:00+00"]
   "created_at" timestamp [not null, default: `now()`]
+  "is_email_verified" boolean [not null, default: false]
+}
+
+Table "verify_emails" {
+  "id" bigint [not null]
+  "username" "character varying" [not null]
+  "email" "character varying" [not null]
+  "secret_code" "character varying" [not null]
+  "is_used" boolean [not null, default: false]
+  "created_at" timestamp [not null, default: `now()`]
+  "expired_at" timestamp [not null, default: `now() + '00:15:00'`]
 }
 
 Ref "accounts_owner_fkey":"users"."username" < "accounts"."owner"
@@ -69,3 +80,5 @@ Ref "session_user_fkey":"users"."username" < "sessions"."username"
 Ref "transfers_from_account_id_fkey":"accounts"."id" < "transfers"."from_account_id"
 
 Ref "transfers_to_account_id_fkey":"accounts"."id" < "transfers"."to_account_id"
+
+Ref "verify_emails_username_fkey":"users"."username" < "verify_emails"."username"

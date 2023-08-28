@@ -181,11 +181,50 @@ CREATE TABLE public.users (
     full_name character varying NOT NULL,
     email character varying NOT NULL,
     password_changed_at timestamp with time zone DEFAULT '0001-01-01 00:00:00+00' NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    is_email_verified boolean DEFAULT false NOT NULL
 );
 
 
 ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: verify_emails; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.verify_emails (
+    id bigint NOT NULL,
+    username character varying NOT NULL,
+    email character varying NOT NULL,
+    secret_code character varying NOT NULL,
+    is_used boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expired_at timestamp with time zone DEFAULT (now() + '00:15:00') NOT NULL
+);
+
+
+ALTER TABLE public.verify_emails OWNER TO postgres;
+
+--
+-- Name: verify_emails_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.verify_emails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.verify_emails_id_seq OWNER TO postgres;
+
+--
+-- Name: verify_emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.verify_emails_id_seq OWNED BY public.verify_emails.id;
+
 
 --
 -- Name: accounts id; Type: DEFAULT; Schema: public; Owner: postgres
@@ -206,6 +245,13 @@ ALTER TABLE ONLY public.entries ALTER COLUMN id SET DEFAULT nextval('public.entr
 --
 
 ALTER TABLE ONLY public.transfers ALTER COLUMN id SET DEFAULT nextval('public.transfers_id_seq'::regclass);
+
+
+--
+-- Name: verify_emails id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.verify_emails ALTER COLUMN id SET DEFAULT nextval('public.verify_emails_id_seq'::regclass);
 
 
 --
@@ -262,6 +308,14 @@ ALTER TABLE ONLY public.transfers
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (username);
+
+
+--
+-- Name: verify_emails verify_emails_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.verify_emails
+    ADD CONSTRAINT verify_emails_pkey PRIMARY KEY (id);
 
 
 --
@@ -337,6 +391,14 @@ ALTER TABLE ONLY public.transfers
 
 ALTER TABLE ONLY public.transfers
     ADD CONSTRAINT transfers_to_account_id_fkey FOREIGN KEY (to_account_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: verify_emails verify_emails_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.verify_emails
+    ADD CONSTRAINT verify_emails_username_fkey FOREIGN KEY (username) REFERENCES public.users(username);
 
 
 --
