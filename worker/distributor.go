@@ -6,6 +6,7 @@ import (
 	"github.com/hibiken/asynq"
 )
 
+//go:generate go run go.uber.org/mock/mockgen -source=distributor.go -destination=./mock/distributor.go
 type TaskDistributor interface {
 	DistributeTaskVerifyEmail(
 		ctx context.Context,

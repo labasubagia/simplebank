@@ -15,6 +15,7 @@ const (
 	QueueDefault  = "default"
 )
 
+//go:generate go run go.uber.org/mock/mockgen -source=processor.go -destination=./mock/processor.go
 type TaskProcessor interface {
 	Start() error
 	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
