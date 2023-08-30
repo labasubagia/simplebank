@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	mock_db "github.com/labasubagia/simplebank/db/mock"
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/pb"
@@ -41,11 +42,11 @@ func TestUpdateUser(t *testing.T) {
 			buildStubs: func(store *mock_db.MockStore) {
 				arg := db.UpdateUserParams{
 					Username: user.Username,
-					Email: sql.NullString{
+					Email: pgtype.Text{
 						String: newEmail,
 						Valid:  true,
 					},
-					FullName: sql.NullString{
+					FullName: pgtype.Text{
 						String: newName,
 						Valid:  true,
 					},
@@ -85,7 +86,7 @@ func TestUpdateUser(t *testing.T) {
 			buildStubs: func(store *mock_db.MockStore) {
 				store.EXPECT().UpdateUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, sql.ErrNoRows)
+					Return(db.User{}, db.ErrRecordNotFound)
 			},
 			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
 				return newContextWithBearerToken(t, tokenMaker, user.Username, time.Minute)

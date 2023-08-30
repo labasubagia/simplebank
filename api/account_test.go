@@ -17,7 +17,6 @@ import (
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/token"
 	"github.com/labasubagia/simplebank/util"
-	"github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -106,7 +105,7 @@ func TestGetAccount(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.Account{}, sql.ErrNoRows)
+					Return(db.Account{}, db.ErrRecordNotFound)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
@@ -225,7 +224,7 @@ func TestCreateAccount(t *testing.T) {
 				store.EXPECT().
 					CreateAccount(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(db.Account{}, &pq.Error{Code: "23505"})
+					Return(db.Account{}, db.ErrUniqueViolation)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusForbidden, recorder.Code)
@@ -248,7 +247,7 @@ func TestCreateAccount(t *testing.T) {
 				store.EXPECT().
 					CreateAccount(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(db.Account{}, &pq.Error{Code: "23503"})
+					Return(db.Account{}, db.ErrForeignKeyViolation)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusForbidden, recorder.Code)

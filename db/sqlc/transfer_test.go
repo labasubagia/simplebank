@@ -15,7 +15,7 @@ func createRandomTransfer(t *testing.T, accountFrom, accountTo Account) Transfer
 		ToAccountID:   accountTo.ID,
 		Amount:        util.RandomMoney(),
 	}
-	transfer, err := testQueries.CreateTransfer(context.Background(), arg)
+	transfer, err := testStore.CreateTransfer(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, transfer)
 
@@ -39,7 +39,7 @@ func TestGetTransfer(t *testing.T) {
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 	transfer1 := createRandomTransfer(t, account1, account2)
-	transfer2, err := testQueries.GetTransfer(context.Background(), transfer1.ID)
+	transfer2, err := testStore.GetTransfer(context.Background(), transfer1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, transfer2)
 
@@ -63,7 +63,7 @@ func TestListTransfers(t *testing.T) {
 		Offset:        5,
 	}
 
-	entries, err := testQueries.ListTransfer(context.Background(), arg)
+	entries, err := testStore.ListTransfer(context.Background(), arg)
 	require.NoError(t, err)
 	require.Len(t, entries, 5)
 
