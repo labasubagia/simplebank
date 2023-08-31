@@ -16,8 +16,9 @@ import (
 
 func newTestServer(t *testing.T, store db.Store, taskDistributor worker.TaskDistributor) *Server {
 	config := util.Config{
-		TokenSymmetricKey:   util.RandomString(32),
-		AccessTokenDuration: time.Minute,
+		TokenSymmetricKey:    util.RandomString(32),
+		AccessTokenDuration:  time.Minute,
+		RefreshTokenDuration: time.Hour,
 	}
 
 	server, err := NewServer(config, store, taskDistributor)
