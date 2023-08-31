@@ -24,7 +24,7 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 
 	arg := db.CreateAccountParams{
 		Owner:    authPayload.Username,
-		Currency: req.Currency,
+		Currency: req.GetCurrency(),
 		Balance:  0,
 	}
 	account, err := server.store.CreateAccount(ctx, arg)
