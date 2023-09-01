@@ -18,8 +18,9 @@ func TestMain(m *testing.M) {
 
 func newTestServer(t *testing.T, store db.Store) *Server {
 	config := util.Config{
-		TokenSymmetricKey:   util.RandomString(32),
-		AccessTokenDuration: time.Minute,
+		TokenSymmetricKey:    util.RandomString(32),
+		AccessTokenDuration:  time.Minute,
+		RefreshTokenDuration: time.Hour,
 	}
 	server, err := NewServer(config, store)
 	require.NoError(t, err)
