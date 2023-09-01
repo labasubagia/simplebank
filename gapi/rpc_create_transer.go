@@ -13,8 +13,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-var ErrCurrencyInvalid = errors.New("currency invalid")
-
 func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransferRequest) (*pb.CreateTransferResponse, error) {
 
 	authPayload, err := server.authorizeUser(ctx)
@@ -28,7 +26,7 @@ func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransfer
 
 	fromAccount, err := server.validAccount(ctx, req.GetFromAccountId(), req.GetCurrency())
 	if err != nil {
-		if errors.Is(err, ErrCurrencyInvalid) {
+		if errors.Is(err, util.ErrInvalidCurrency) {
 			return nil, status.Errorf(codes.InvalidArgument, "mismatch currency %s and %s", fromAccount.Currency, req.GetCurrency())
 		}
 		if errors.Is(err, db.ErrRecordNotFound) {
@@ -42,7 +40,7 @@ func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransfer
 
 	toAccount, err := server.validAccount(ctx, req.GetToAccountId(), req.GetCurrency())
 	if err != nil {
-		if errors.Is(err, ErrCurrencyInvalid) {
+		if errors.Is(err, util.ErrInvalidCurrency) {
 			return nil, status.Errorf(codes.InvalidArgument, "mismatch currency %s and %s", fromAccount.Currency, req.GetCurrency())
 		}
 		if errors.Is(err, db.ErrRecordNotFound) {
@@ -78,7 +76,7 @@ func (server *Server) validAccount(ctx context.Context, accountID int64, currenc
 	}
 
 	if account.Currency != currency {
-		return account, ErrCurrencyInvalid
+		return account, util.ErrInvalidCurrency
 	}
 
 	return account, nil
@@ -94,8 +92,8 @@ func validateTransferRequest(req *pb.CreateTransferRequest) (violations []*errde
 	if req.GetAmount() < 1 {
 		violations = append(violations, fieldValidation("amount", errors.New("amount minimal 1")))
 	}
-	if ok := util.IsSupportedCurrency(req.GetCurrency()); !ok {
-		violations = append(violations, fieldValidation("currency", errors.New("not supported currency")))
+	if err := val.ValidateCurrency(req.GetCurrency()); err != nil {
+		violations = append(violations, fieldValidation("currency", err))
 	}
 	return violations
 }

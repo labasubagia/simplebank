@@ -2,11 +2,10 @@ package gapi
 
 import (
 	"context"
-	"errors"
 
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/pb"
-	"github.com/labasubagia/simplebank/util"
+	"github.com/labasubagia/simplebank/val"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -41,8 +40,8 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 }
 
 func validateCreateAccountRequest(req *pb.CreateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if ok := util.IsSupportedCurrency(req.GetCurrency()); !ok {
-		violations = append(violations, fieldValidation("currency", errors.New("not supported currency")))
+	if err := val.ValidateCurrency(req.GetCurrency()); err != nil {
+		violations = append(violations, fieldValidation("currency", err))
 	}
 	return violations
 }
