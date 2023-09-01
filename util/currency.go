@@ -8,7 +8,10 @@ const (
 	IDR = "IDR"
 )
 
-var ErrInvalidCurrency = errors.New("currency invalid")
+var (
+	ErrInvalidCurrency  = errors.New("currency invalid")
+	ErrMismatchCurrency = errors.New("currency mismatch")
+)
 
 func IsSupportedCurrency(currency string) bool {
 	switch currency {

@@ -26,7 +26,7 @@ func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransfer
 
 	fromAccount, err := server.validAccount(ctx, req.GetFromAccountId(), req.GetCurrency())
 	if err != nil {
-		if errors.Is(err, util.ErrInvalidCurrency) {
+		if errors.Is(err, util.ErrMismatchCurrency) {
 			return nil, status.Errorf(codes.InvalidArgument, "mismatch currency %s and %s", fromAccount.Currency, req.GetCurrency())
 		}
 		if errors.Is(err, db.ErrRecordNotFound) {
@@ -40,7 +40,7 @@ func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransfer
 
 	toAccount, err := server.validAccount(ctx, req.GetToAccountId(), req.GetCurrency())
 	if err != nil {
-		if errors.Is(err, util.ErrInvalidCurrency) {
+		if errors.Is(err, util.ErrMismatchCurrency) {
 			return nil, status.Errorf(codes.InvalidArgument, "mismatch currency %s and %s", fromAccount.Currency, req.GetCurrency())
 		}
 		if errors.Is(err, db.ErrRecordNotFound) {
@@ -72,11 +72,11 @@ func (server *Server) CreateTransfer(ctx context.Context, req *pb.CreateTransfer
 func (server *Server) validAccount(ctx context.Context, accountID int64, currency string) (db.Account, error) {
 	account, err := server.store.GetAccount(ctx, accountID)
 	if err != nil {
-		return account, db.ErrRecordNotFound
+		return account, err
 	}
 
 	if account.Currency != currency {
-		return account, util.ErrInvalidCurrency
+		return account, util.ErrMismatchCurrency
 	}
 
 	return account, nil
