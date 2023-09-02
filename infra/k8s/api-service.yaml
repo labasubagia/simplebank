@@ -14,10 +14,22 @@ spec:
       name: gateway
       targetPort: 5050
       port: 5050
-    - protocol: TCP
-      name: grpc
-      targetPort: 6000
-      port: 6000
   selector:
     io.kompose.service: api
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: api-grpc
+  name: api-grpc
+spec:
+  ports:
+    - protocol: TCP
+      name: grpc
+      port: 6000
+      nodePort: 30000
+  selector:
+    io.kompose.service: api
+  type: NodePort
