@@ -32,6 +32,8 @@ spec:
           env:
             - name: DB_SOURCE
               value: postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable
+            - name: REDIS_ADDRESS
+              value: redis:6379
           image: docker.io/dreamcheck/simplebank:latest
           name: api
           ports:
