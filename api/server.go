@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -44,7 +45,12 @@ func (server *Server) Start(address string) error {
 }
 
 func (server *Server) setupRouter() {
-	router := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.Use(Logger(), gin.Recovery())
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello World"})
+	})
 
 	v1 := router.Group("/v1")
 	v1.POST("/users", server.createUser)
