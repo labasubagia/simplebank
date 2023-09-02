@@ -30,6 +30,7 @@ services:
     environment:
       # - GIN_MODE=release
       - DB_SOURCE=postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable
+      - REDIS_ADDRESS=redis:6379
     depends_on:
       - db
       - redis
