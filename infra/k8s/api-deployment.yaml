@@ -30,6 +30,10 @@ spec:
             - --
             - /app/start.sh
           env:
+            - name: GIN_MODE
+              value: release
+            - name: ENVIRONMENT
+              value: production
             - name: DB_SOURCE
               value: postgresql://postgres:postgres@db:5432/simple_bank?sslmode=disable
             - name: REDIS_ADDRESS

@@ -16,7 +16,7 @@ spec:
       port: 5050
     - protocol: TCP
       name: grpc
-      targetPort: 5050
+      targetPort: 6000
       port: 6000
   selector:
     io.kompose.service: api
