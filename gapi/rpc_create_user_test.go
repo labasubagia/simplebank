@@ -165,8 +165,6 @@ func TestCreateUser(t *testing.T) {
 	for i := range testCases {
 		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			storeCtrl := gomock.NewController(t)
 			defer storeCtrl.Finish()
 			store := mock_db.NewMockStore(storeCtrl)

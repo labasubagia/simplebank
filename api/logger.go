@@ -13,13 +13,18 @@ func Logger() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		startTime := time.Now()
+		// process request
 		c.Next()
 		duration := time.Since(startTime)
 
 		logger := log.Info()
 		if c.Writer.Status() >= 500 {
-			bytes, _ := io.ReadAll(c.Request.Body)
-			logger = log.Error().Bytes("body", bytes)
+			logger = log.Error()
+			if c.Request != nil && c.Request.Body != nil {
+				if body, err := io.ReadAll(c.Request.Body); err == nil {
+					logger.Bytes("body", body)
+				}
+			}
 		}
 
 		logger.

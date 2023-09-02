@@ -181,8 +181,6 @@ func TestCreateUser(t *testing.T) {
 	for i := range testCases {
 		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -307,7 +305,6 @@ func TestLoginUser(t *testing.T) {
 	for i := range testCases {
 		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
