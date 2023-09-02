@@ -38,7 +38,7 @@ jobs:
       - name: Test API
         run: |
           sleep 5
-          curl --location "http://api.simplebank.co.id/users" \
+          curl --location "http://api.simplebank.co.id/v1/users" \
             --data-raw '{
                 "username": "test",
                 "full_name": "Test User",
