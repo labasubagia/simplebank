@@ -13,12 +13,12 @@ import (
 	"github.com/hibiken/asynq"
 	_ "github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/labasubagia/simplebank/api"
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	_ "github.com/labasubagia/simplebank/doc/swagger/statik"
-	"github.com/labasubagia/simplebank/gapi"
+	grpc_api "github.com/labasubagia/simplebank/grpc/api"
+	"github.com/labasubagia/simplebank/grpc/pb"
 	"github.com/labasubagia/simplebank/mail"
-	"github.com/labasubagia/simplebank/pb"
+	"github.com/labasubagia/simplebank/restful_api"
 	"github.com/labasubagia/simplebank/util"
 	"github.com/labasubagia/simplebank/worker"
 	"github.com/rakyll/statik/fs"
@@ -81,7 +81,7 @@ func runTaskProcessor(config util.Config, redisOpt asynq.RedisClientOpt, store d
 }
 
 func runGatewayServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
-	server, err := gapi.NewServer(config, store, taskDistributor)
+	server, err := grpc_api.NewServer(config, store, taskDistributor)
 	if err != nil {
 		log.Fatal().Msgf("cannot create gateway server: %s", err)
 	}
@@ -120,7 +120,7 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 	}
 
 	log.Info().Msgf("start HTTP Gateway server at %s", listener.Addr().String())
-	handler := gapi.HttpLogger(mux)
+	handler := grpc_api.HttpLogger(mux)
 	err = http.Serve(listener, handler)
 	if err != nil {
 		log.Fatal().Msg("cannot start HTTP Gateway server")
@@ -129,9 +129,9 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 
 func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
 
-	logger := grpc.UnaryInterceptor(gapi.GrpcLogger)
+	logger := grpc.UnaryInterceptor(grpc_api.GrpcLogger)
 	grpcServer := grpc.NewServer(logger)
-	server, err := gapi.NewServer(config, store, taskDistributor)
+	server, err := grpc_api.NewServer(config, store, taskDistributor)
 	if err != nil {
 		log.Fatal().Msgf("cannot create server: %s", err)
 	}
@@ -152,11 +152,12 @@ func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.Ta
 
 //nolint:golint,unused
 func runGinServer(config util.Config, store db.Store) {
-	server, err := api.NewServer(config, store)
+	server, err := restful_api.NewServer(config, store)
 	if err != nil {
 		log.Fatal().Msgf("cannot create server: %s", err)
 	}
 
+	log.Info().Msgf("start gin server at port %s", config.HTTPServerAddress)
 	err = server.Start(config.HTTPServerAddress)
 	if err != nil {
 		log.Fatal().Msgf("cannot start server: %s", err)

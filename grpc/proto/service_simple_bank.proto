@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+import "rpc_create_user.proto";
+import "rpc_update_user.proto";
+import "rpc_login_user.proto";
+import "rpc_renew_access_token.proto";
+import "rpc_verify_email.proto";
+import "rpc_create_account.proto";
+import "rpc_create_transfer.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/labasubagia/simplebank/grpc/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Simplebank";
+    version: "1.0";
+    contact: {
+      name: "Simplebank API";
+      url: "https://github.com/labasubagia/simplebank";
+      email: "none@example.com";
+    };
+  };
+};
+
+service SimpleBank {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/users"
+            body: "*"
+        };
+    }
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+        option (google.api.http) = {
+            patch: "/v1/users"
+            body: "*"
+        };
+    }
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/login"
+            body: "*"
+        };
+    }
+    rpc RenewAccessToken (RenewAccessTokenRequest) returns (RenewAccessTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/token/renew_access"
+            body: "*"
+        };
+    }
+    rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
+        option (google.api.http) = {
+            get: "/v1/verify_email"
+        };
+    }
+    rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
+        option (google.api.http) = {
+            post: "/v1/accounts"
+            body: "*"
+        };
+    }
+    rpc CreateTransfer (CreateTransferRequest) returns (CreateTransferResponse) {
+        option (google.api.http) = {
+            post: "/v1/transfers"
+            body: "*"
+        };
+    }
+}

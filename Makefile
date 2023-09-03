@@ -41,14 +41,14 @@ generate:
 	go generate ./...
 
 protoc:
-	rm -f pb/*.go
+	rm -f grpc/pb/*.go
 	rm -f doc/swagger/*.swagger.json
 	rm -f doc/swagger/ui/*.swagger.json
-	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
-		--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
-		--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+	protoc --proto_path=grpc/proto --go_out=grpc/pb --go_opt=paths=source_relative \
+		--go-grpc_out=grpc/pb --go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=grpc/pb --grpc-gateway_opt=paths=source_relative \
 		--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=simplebank \
-		proto/*.proto
+		grpc/proto/*.proto
 	cp -f doc/swagger/*.swagger.json doc/swagger/ui
 	statik -src=./doc/swagger/ui -dest=./doc/swagger
 
