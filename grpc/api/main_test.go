@@ -7,8 +7,8 @@ import (
 	"time"
 
 	db "github.com/labasubagia/simplebank/db/sqlc"
-	"github.com/labasubagia/simplebank/token"
 	"github.com/labasubagia/simplebank/util"
+	"github.com/labasubagia/simplebank/util/token"
 	"github.com/labasubagia/simplebank/worker"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"

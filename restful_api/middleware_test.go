@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/labasubagia/simplebank/token"
+	"github.com/labasubagia/simplebank/util/token"
 	"github.com/stretchr/testify/require"
 )
 

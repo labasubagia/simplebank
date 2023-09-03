@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/labasubagia/simplebank/db/sqlc"
-	"github.com/labasubagia/simplebank/token"
+	"github.com/labasubagia/simplebank/util/token"
 )
 
 type transferRequest struct {

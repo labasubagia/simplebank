@@ -15,8 +15,8 @@ import (
 	"github.com/gin-gonic/gin"
 	mock_db "github.com/labasubagia/simplebank/db/mock"
 	db "github.com/labasubagia/simplebank/db/sqlc"
-	"github.com/labasubagia/simplebank/token"
 	"github.com/labasubagia/simplebank/util"
+	"github.com/labasubagia/simplebank/util/token"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

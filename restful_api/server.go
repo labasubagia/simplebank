@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	db "github.com/labasubagia/simplebank/db/sqlc"
-	"github.com/labasubagia/simplebank/token"
 	"github.com/labasubagia/simplebank/util"
+	"github.com/labasubagia/simplebank/util/token"
 )
 
 type Server struct {

@@ -9,7 +9,6 @@ import (
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/grpc/pb"
 	"github.com/labasubagia/simplebank/util"
-	"github.com/labasubagia/simplebank/val"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -71,21 +70,21 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 }
 
 func validateUpdateUserRequest(req *pb.UpdateUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateUsername(req.GetUsername()); err != nil {
+	if err := util.ValidateUsername(req.GetUsername()); err != nil {
 		violations = append(violations, fieldValidation("username", err))
 	}
 	if req.FullName != nil {
-		if err := val.ValidateFullName(req.GetFullName()); err != nil {
+		if err := util.ValidateFullName(req.GetFullName()); err != nil {
 			violations = append(violations, fieldValidation("full_name", err))
 		}
 	}
 	if req.Email != nil {
-		if err := val.ValidateEmail(req.GetEmail()); err != nil {
+		if err := util.ValidateEmail(req.GetEmail()); err != nil {
 			violations = append(violations, fieldValidation("email", err))
 		}
 	}
 	if req.Password != nil {
-		if err := val.ValidatePassword(req.GetPassword()); err != nil {
+		if err := util.ValidatePassword(req.GetPassword()); err != nil {
 			violations = append(violations, fieldValidation("password", err))
 		}
 	}

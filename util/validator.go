@@ -1,11 +1,9 @@
-package val
+package util
 
 import (
 	"fmt"
 	"net/mail"
 	"regexp"
-
-	"github.com/labasubagia/simplebank/util"
 )
 
 var (
@@ -70,8 +68,8 @@ func ValidateID(value int64) error {
 }
 
 func ValidateCurrency(currency string) error {
-	if !util.IsSupportedCurrency(currency) {
-		return util.ErrInvalidCurrency
+	if !IsSupportedCurrency(currency) {
+		return ErrInvalidCurrency
 	}
 	return nil
 }

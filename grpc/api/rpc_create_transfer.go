@@ -7,7 +7,6 @@ import (
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/grpc/pb"
 	"github.com/labasubagia/simplebank/util"
-	"github.com/labasubagia/simplebank/val"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -83,16 +82,16 @@ func (server *Server) validAccount(ctx context.Context, accountID int64, currenc
 }
 
 func validateTransferRequest(req *pb.CreateTransferRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateID(req.GetFromAccountId()); err != nil {
+	if err := util.ValidateID(req.GetFromAccountId()); err != nil {
 		violations = append(violations, fieldValidation("from_account_id", err))
 	}
-	if err := val.ValidateID(req.GetToAccountId()); err != nil {
+	if err := util.ValidateID(req.GetToAccountId()); err != nil {
 		violations = append(violations, fieldValidation("to_account_id", err))
 	}
 	if req.GetAmount() < 1 {
 		violations = append(violations, fieldValidation("amount", errors.New("amount minimal 1")))
 	}
-	if err := val.ValidateCurrency(req.GetCurrency()); err != nil {
+	if err := util.ValidateCurrency(req.GetCurrency()); err != nil {
 		violations = append(violations, fieldValidation("currency", err))
 	}
 	return violations

@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/grpc/pb"
-	"github.com/labasubagia/simplebank/token"
 	"github.com/labasubagia/simplebank/util"
+	"github.com/labasubagia/simplebank/util/token"
 	"github.com/labasubagia/simplebank/worker"
 )
 

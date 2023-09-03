@@ -8,7 +8,6 @@ import (
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/grpc/pb"
 	"github.com/labasubagia/simplebank/util"
-	"github.com/labasubagia/simplebank/val"
 	"github.com/labasubagia/simplebank/worker"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -60,16 +59,16 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 }
 
 func validateCreateUserRequest(req *pb.CreateUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateEmail(req.GetEmail()); err != nil {
+	if err := util.ValidateEmail(req.GetEmail()); err != nil {
 		violations = append(violations, fieldValidation("email", err))
 	}
-	if err := val.ValidateUsername(req.GetUsername()); err != nil {
+	if err := util.ValidateUsername(req.GetUsername()); err != nil {
 		violations = append(violations, fieldValidation("username", err))
 	}
-	if err := val.ValidateFullName(req.GetFullName()); err != nil {
+	if err := util.ValidateFullName(req.GetFullName()); err != nil {
 		violations = append(violations, fieldValidation("full_name", err))
 	}
-	if err := val.ValidatePassword(req.GetPassword()); err != nil {
+	if err := util.ValidatePassword(req.GetPassword()); err != nil {
 		violations = append(violations, fieldValidation("password", err))
 	}
 	return violations

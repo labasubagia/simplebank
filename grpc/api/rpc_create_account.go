@@ -5,7 +5,7 @@ import (
 
 	db "github.com/labasubagia/simplebank/db/sqlc"
 	"github.com/labasubagia/simplebank/grpc/pb"
-	"github.com/labasubagia/simplebank/val"
+	"github.com/labasubagia/simplebank/util"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,7 +40,7 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 }
 
 func validateCreateAccountRequest(req *pb.CreateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateCurrency(req.GetCurrency()); err != nil {
+	if err := util.ValidateCurrency(req.GetCurrency()); err != nil {
 		violations = append(violations, fieldValidation("currency", err))
 	}
 	return violations
